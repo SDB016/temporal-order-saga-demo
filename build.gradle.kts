@@ -31,8 +31,11 @@ subprojects {
 
     dependencies {
         implementation("io.temporal:temporal-sdk:${DependencyVersion.TEMPORAL_SDK}")
-        implementation("org.springframework.boot:spring-boot-starter")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+        // spring boot
+        implementation("org.springframework.boot:spring-boot-starter")
+        implementation("org.springframework.boot:spring-boot-starter-web:${DependencyVersion.SPRING_BOOT_WEB}")
 
         /** logger */
         implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersion.KOTLIN_LOGGING}")
