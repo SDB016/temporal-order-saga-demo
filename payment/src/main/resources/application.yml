@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: payment
+
+server:
+  port: 8082
+
+temporal:
+  server: localhost:7233
+  task-queue: PaymentTaskQueue
+
