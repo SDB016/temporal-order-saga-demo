@@ -1,8 +1,8 @@
 package com.demo.temporal.order.workflow
 
-import com.demo.temporal.order.activities.DeliveryActivities
-import com.demo.temporal.order.activities.InventoryActivities
-import com.demo.temporal.order.activities.PaymentActivities
+import com.demo.temporal.delivery.activity.DeliveryActivities
+import com.demo.temporal.inventory.activity.InventoryActivities
+import com.demo.temporal.payment.activity.PaymentActivities
 import io.temporal.activity.ActivityOptions
 import io.temporal.workflow.Saga
 import io.temporal.workflow.Workflow

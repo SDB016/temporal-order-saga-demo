@@ -1,4 +1,4 @@
-package com.demo.temporal.order.activities
+package com.demo.temporal.delivery.activity
 
 import io.temporal.activity.ActivityInterface
 

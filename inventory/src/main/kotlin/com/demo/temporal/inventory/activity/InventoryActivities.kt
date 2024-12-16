@@ -1,4 +1,4 @@
-package com.demo.temporal.order.activities
+package com.demo.temporal.inventory.activity
 
 import io.temporal.activity.ActivityInterface
 
@@ -6,5 +6,4 @@ import io.temporal.activity.ActivityInterface
 interface InventoryActivities {
     fun restockInventory(orderId: String)
     fun reserveInventory(orderId: String)
-
 }
