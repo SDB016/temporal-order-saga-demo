@@ -6,6 +6,6 @@ server:
   port: 8082
 
 temporal:
-  server: localhost:7233
+  server: temporal:7233
   task-queue: PaymentTaskQueue
 

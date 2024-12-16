@@ -33,14 +33,11 @@ class TemporalConfig(
 
     @Bean
     fun workerFactory(client: WorkflowClient): WorkerFactory {
-        return WorkerFactory.newInstance(client)
-    }
-
-    @Bean
-    fun paymentWorker(factory: WorkerFactory): Worker {
+        val factory = WorkerFactory.newInstance(client)
         val worker = factory.newWorker(taskQueue)
         worker.registerActivitiesImplementations(PaymentActivitiesImpl())
-        return worker
+
+        return factory
     }
 
 }

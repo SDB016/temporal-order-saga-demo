@@ -20,25 +20,22 @@ class OrderTemporalConfig {
     fun workflowServiceStubs(): WorkflowServiceStubs {
         return WorkflowServiceStubs.newServiceStubs(
             WorkflowServiceStubsOptions.newBuilder()
-                .setTarget("localhost:7233") // Temporal 서버 주소
+                .setTarget("temporal:7233") // Temporal 서버 주소
                 .build()
         )
     }
 
     @Bean
-    fun workflowClient(service: WorkflowServiceStubs): WorkflowClient {
-        return WorkflowClient.newInstance(service)
+    fun workflowClient(workflowServiceStubs: WorkflowServiceStubs): WorkflowClient {
+        return WorkflowClient.newInstance(workflowServiceStubs)
     }
 
     @Bean
     fun workerFactory(client: WorkflowClient): WorkerFactory {
-        return WorkerFactory.newInstance(client)
-    }
-
-    @Bean
-    fun orderWorker(factory: WorkerFactory): Worker {
+        val factory = WorkerFactory.newInstance(client)
         val worker = factory.newWorker("OrderTaskQueue")
         worker.registerWorkflowImplementationTypes(OrderWorkflowImpl::class.java)
-        return worker
+
+        return factory
     }
 }

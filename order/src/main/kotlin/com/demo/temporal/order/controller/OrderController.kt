@@ -24,7 +24,7 @@ class OrderController(
             .build()
 
         val workflow = workflowClient.newWorkflowStub(OrderWorkflow::class.java, options)
-        WorkflowClient.start({ orderId: String -> workflow.processOrder(orderId) }, orderId)
+        WorkflowClient.start({ oId: String -> workflow.processOrder(oId) }, orderId)
 //        workflow.processOrder(orderId)
         return ResponseEntity.ok("Order workflow started for orderId: $orderId")
     }

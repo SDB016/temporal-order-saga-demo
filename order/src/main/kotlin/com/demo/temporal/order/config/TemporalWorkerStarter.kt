@@ -11,7 +11,12 @@ class TemporalWorkerStarter(private val factory: WorkerFactory) {
 
     @PostConstruct
     fun startFactory() {
-        factory.start()
-        logger.info { "Temporal Worker Factory started" }
+        try {
+            factory.start()
+            logger.info { "Order Worker Factory started" }
+        } catch (e: Exception) {
+            logger.error(e) { "Order Worker Factory failed" }
+            throw e
+        }
     }
 }
