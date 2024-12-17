@@ -7,47 +7,54 @@ import io.temporal.activity.ActivityOptions
 import io.temporal.workflow.Saga
 import io.temporal.workflow.Workflow
 import java.time.Duration
+import org.springframework.stereotype.Component
 
+@Component
 class OrderWorkflowImpl : OrderWorkflow {
-    private val paymentOptions: ActivityOptions = ActivityOptions.newBuilder()
-        .setTaskQueue("PaymentTaskQueue")
-        .setScheduleToCloseTimeout(Duration.ofSeconds(30))
-        .build()
 
-    private val inventoryOptions: ActivityOptions = ActivityOptions.newBuilder()
-        .setTaskQueue("InventoryTaskQueue")
-        .setScheduleToCloseTimeout(Duration.ofSeconds(30))
-        .build()
+    private val paymentActivities = createActivityStub(PaymentActivities::class.java, "PaymentTaskQueue")
+    private val inventoryActivities = createActivityStub(InventoryActivities::class.java, "InventoryTaskQueue")
+    private val deliveryActivities = createActivityStub(DeliveryActivities::class.java, "DeliveryTaskQueue")
 
-    private val deliveryOptions: ActivityOptions = ActivityOptions.newBuilder()
-        .setTaskQueue("DeliveryTaskQueue")
-        .setScheduleToCloseTimeout(Duration.ofSeconds(30))
-        .build()
-
-    private val paymentActivities = Workflow.newActivityStub(PaymentActivities::class.java, paymentOptions)
-    private val inventoryActivities = Workflow.newActivityStub(InventoryActivities::class.java, inventoryOptions)
-    private val deliveryActivities = Workflow.newActivityStub(DeliveryActivities::class.java, deliveryOptions)
-
-
-    override fun processOrder(orderId: String) {
+    override fun processOrder(orderId: String, amount: Double) {
         val saga = Saga(Saga.Options.Builder().build())
 
+        // Workflow 구성
         try {
             // 결제 처리
-            saga.addCompensation { paymentActivities.refundPayment(orderId) }
-            paymentActivities.processPayment(orderId)
-
-            // 재고 예약
-            saga.addCompensation { inventoryActivities.restockInventory(orderId) }
-            inventoryActivities.reserveInventory(orderId)
-
+            processPayment(saga, orderId, amount)
+            // 재고 처리
+            reserveInventory(saga, orderId)
             // 배송 처리
-            saga.addCompensation { deliveryActivities.cancelDelivery(orderId) }
-            deliveryActivities.deliverOrder(orderId)
+            processDelivery(saga, orderId)
         } catch (e: Exception) {
             saga.compensate()
             throw Workflow.wrap(e)
         }
     }
 
+    // 각 처리 단계
+    private fun processPayment(saga: Saga, orderId: String, amount: Double) {
+        saga.addCompensation { paymentActivities.refundPayment(orderId) }
+        paymentActivities.processPayment(orderId, amount)
+    }
+
+    private fun reserveInventory(saga: Saga, orderId: String) {
+        saga.addCompensation { inventoryActivities.restockInventory(orderId) }
+        inventoryActivities.reserveInventory(orderId)
+    }
+
+    private fun processDelivery(saga: Saga, orderId: String) {
+        saga.addCompensation { deliveryActivities.cancelDelivery(orderId) }
+        deliveryActivities.deliverOrder(orderId)
+    }
+
+
+    private fun <T> createActivityStub(activityClass: Class<T>, taskQueue: String): T {
+        val activityOptions = ActivityOptions.newBuilder()
+            .setTaskQueue(taskQueue)
+            .setScheduleToCloseTimeout(Duration.ofSeconds(30))
+            .build()
+        return Workflow.newActivityStub(activityClass, activityOptions)
+    }
 }

@@ -6,6 +6,6 @@ import io.temporal.workflow.WorkflowMethod
 @WorkflowInterface
 interface OrderWorkflow {
     @WorkflowMethod
-    fun processOrder(orderId: String)
+    fun processOrder(orderId: String, amount: Double)
 
 }
