@@ -48,7 +48,7 @@ class InventoryActivitiesImpl : InventoryActivities {
 
             if (item.stock >= 0) {
                 inventoryItems[itemId] = item.copy(stock = item.stock + 1)
-                logger.info { "Order $orderId: $itemId 재고 원복 완료" }
+                logger.info { "Order $orderId: $itemId 재고 원복 완료 (남은 수량: ${inventoryItems[itemId]?.stock}, 창고: ${item.warehouses.first()})" }
             }
         } catch (e: Exception) {
             logger.error { "Order $orderId: 재고 원복 실패 - ${e.message}" }
