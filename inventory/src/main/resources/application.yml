@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: inventory
+
+temporal:
+  server: temporal:7233
+  task-queue: InventoryTaskQueue

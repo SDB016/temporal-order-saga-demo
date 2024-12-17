@@ -30,16 +30,21 @@ subprojects {
     }
 
     dependencies {
+        // Temporal Core SDK
         implementation("io.temporal:temporal-sdk:${DependencyVersion.TEMPORAL_SDK}")
+
+        // Spring Boot
         implementation("org.springframework.boot:spring-boot-starter")
+        implementation("org.springframework.boot:spring-boot-starter-web:${DependencyVersion.SPRING_BOOT_WEB}")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
 
         /** logger */
         implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersion.KOTLIN_LOGGING}")
 
-        testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+        // Test Dependencies
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        testImplementation("io.temporal:temporal-testing:1.24.1")
+        testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     }
 
     tasks.withType<Test> {

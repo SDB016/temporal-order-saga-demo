@@ -4,7 +4,7 @@ import io.temporal.activity.ActivityInterface
 
 @ActivityInterface
 interface PaymentActivities {
-    fun processPayment(orderId: String)
+    fun processPayment(orderId: String, amount: Double)
     fun refundPayment(orderId: String)
 
 }

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: delivery
+
+temporal:
+  server: temporal:7233
+  task-queue: DeliveryTaskQueue
